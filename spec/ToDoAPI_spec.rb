@@ -1,12 +1,11 @@
-require 'rspec'
-require 'httparty'
-require 'date'
+
 
 describe HTTParty do
 
   todo1 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 1", due: Date.today + 1 })
   todo2 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 2", due: Date.today + 1 })
   todo3 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 3", due: Date.today + 1 })
+
 
   ###  GET Methods Testing
 
