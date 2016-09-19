@@ -1,4 +1,6 @@
-
+require 'rspec'
+require 'httparty'
+require 'pry'
 
 describe HTTParty do
 
@@ -7,6 +9,7 @@ describe HTTParty do
   todo3 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 3", due: Date.today + 1 })
   todo4 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 4", due: Date.today + 1 })
   todo5 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 5", due: Date.today + 1 })
+
 
 
   ###  GET Methods Testing
@@ -43,6 +46,54 @@ describe HTTParty do
     r = HTTParty.get('http://lacedeamon.spartaglobal.com/todos/79609876554337887667')
     expect(r.code).to eq 404
     expect(r.message).to eq "Not Found"
+
+  end
+
+  ### PATCH Methods Testing
+
+  it "Update title of item with valid ID" do
+
+    r1 = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}", query:{title:"Buy Stuff"}
+    expect(r1.code).to eq 200
+    expect(r1.message).to eq "OK"
+    expect(r1['id']).to eq 7959
+    expect(r1['title']).to eq "Buy Stuff"
+    expect(r1['due']).to eq Date.today + 1
+
+  end
+
+  it "Update title of item with invalid ID" do
+
+    r2 = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/50", query:{title:"Buy Stuff"}
+    expect(r2.code).to eq 404
+    expect(r2.message).to eq "Not Found"
+
+  end
+
+  it "Update due date of item with valid ID" do
+
+    r3 = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}", query:{due:"2017-02-13"}
+    expect(r3.code).to eq 200
+    expect(r3.message).to eq "OK"
+    expect(r3['id']).to eq 7959
+    expect(r3['title']).to eq "Buy Stuff"
+    expect(r3['due']).to eq "2017-02-13"
+
+  end
+
+  it "Update due date of item with past date" do
+
+    r4 = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}", query:{due:"2002-02-13"}
+    expect(r2.code).to eq 400
+    expect(r2.message).to eq "Bad Request. Date not in future."
+
+  end
+
+  it "update title with nil values" do
+
+    r5 = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}", query:{title:nil}
+    expect(r5.code).to eq 405
+    expect(r5.message).to eq 'Method Not Allowed'
 
   end
 
@@ -134,7 +185,9 @@ describe HTTParty do
     expect(del3.code).to eq 405
     expect(del3.message).to eq "Method Not Allowed"
 
+
   end
+
 
 
 
