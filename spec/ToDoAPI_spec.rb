@@ -164,15 +164,25 @@ describe HTTParty do
 
   it "Try to create with invalid parameters" do
 
-
+    post3 = HTTParty.post("http://lacedeamon.spartaglobal.com/todos", query:{title: nil, due: nil })
+    expect(post3.code).to eq 400
+    expect(post3.message).to eq "Bad Request. Invalid Parameters"
 
   end
 
   it "Try to create with too few arguments" do
 
+    post4 = HTTParty.post("http://lacedeamon.spartaglobal.com/todos")
+    expect(post4.code).to eq 422
+    expect(post4.message).to eq "Unprocessable Entity"
+
   end
 
   it "Try to create with too many arguments" do
+
+    post5 = HTTParty.post("http://lacedeamon.spartaglobal.com/todos", query:{title: "asdfasdf", hello: "asdfausadhf", lotsofparams: "asdfasdfahhfa", somany: "asdfhdssrt", })
+    expect(post5.code).to eq 422
+    expect(post5.message).to eq "Unprocessable Entity"
 
   end
 
