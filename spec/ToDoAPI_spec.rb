@@ -4,6 +4,9 @@ require 'date'
 
 describe HTTParty do
 
+  todo1 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 1", due: Date.today + 1 })
+  todo2 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 2", due: Date.today + 1 })
+  todo3 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 3", due: Date.today + 1 })
 
   ###  GET Methods Testing
 
@@ -17,13 +20,12 @@ describe HTTParty do
 
   it "Get specific todo" do
 
-    r = HTTParty.get('http://lacedeamon.spartaglobal.com/todos/7960')
+    r = HTTParty.get("http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}")
     expect(r.code).to eq 200
     expect(r.message).to eq "OK"
-    expect(r['id']).to eq 7960
-    expect(r['title']).to eq "Remember the milk"
-    expect(r['due']).to eq "2016-09-25"
-    expect(r['created_at']).to eq "2016-09-19T12:55:10.855Z"
+    expect(r['id']).to eq todo1['id']
+    expect(r['title']).to eq todo1['title']
+    expect(r['due']).to eq todo1['due']
 
   end
 
@@ -107,7 +109,7 @@ describe HTTParty do
 
 
   ###  DELETE METHODS TESTS
-
+=begin
   it "Delete with valid ID" do
 
     del1 = HTTParty.delete('http://lacedeamon.spartaglobal.com/todos/7902')
@@ -119,6 +121,7 @@ describe HTTParty do
     HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{id: 7902, title: "Hello John", due: "24-09-2016"})
 
   end
+=end
 
   it "Delete with invalid ID" do
 
@@ -129,6 +132,36 @@ describe HTTParty do
   end
 
   it "Delete without ID/ Whole list" do
+
+    del3 = HTTParty.delete('http://lacedeamon.spartaglobal.com/todos')
+    expect(del3.code).to eq 405
+    expect(del3.message).to eq "Method Not Allowed"
+
+  end
+
+
+
+
+  ### POST METHOD TESTS
+
+
+  it "Valid creating new todo" do
+
+  end
+
+  it "Try to create against todos/id" do
+
+  end
+
+  it "Try to create with invalid parameters" do
+
+  end
+
+  it "Try to create with too few arguments" do
+
+  end
+
+  it "Try to create with too many arguments" do
 
   end
 
