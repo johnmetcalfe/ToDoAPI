@@ -53,7 +53,7 @@ describe HTTParty do
 
   it "Update title of item with valid ID" do
 
-    r1 = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}", query:{title:"Buy Stuff"}
+    r = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}", query:{title:"Buy Stuff"}
     expect(r1.code).to eq 200
     expect(r1.message).to eq "OK"
     expect(r1['id']).to eq 7959
@@ -72,12 +72,12 @@ describe HTTParty do
 
   it "Update due date of item with valid ID" do
 
-    r3 = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}", query:{due:"2017-02-13"}
+    r3 = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}", query:{due:Date.today + 2}
     expect(r3.code).to eq 200
     expect(r3.message).to eq "OK"
     expect(r3['id']).to eq 7959
     expect(r3['title']).to eq "Buy Stuff"
-    expect(r3['due']).to eq "2017-02-13"
+    expect(r3['due']).to eq Date.today + 2
 
   end
 
@@ -89,7 +89,7 @@ describe HTTParty do
 
   end
 
-  it "update title with nil values" do
+  it "Update title with nil values" do
 
     r5 = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}", query:{title:nil}
     expect(r5.code).to eq 405
