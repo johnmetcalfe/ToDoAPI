@@ -14,6 +14,7 @@ require 'date'
 
 
 def url(path)
+<<<<<<< HEAD
   ('http://lacedeamon.spartaglobal.com' + path)
 end
 
@@ -26,4 +27,7 @@ def delete_all()
     r.each do |item|
       HTTParty.delete url("/todos/#{item['id']}")
     end
+=======
+  ('http://lacedeamon.spartaglobal.com/' + path)
+>>>>>>> 7de281c88b0fd52ebc59b8f561521ed199b6c343
 end
