@@ -4,19 +4,17 @@ require 'pry'
 
 describe HTTParty do
 
-  todo1 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 1", due: Date.today + 1 })
-  todo2 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 2", due: Date.today + 1 })
-  todo3 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 3", due: Date.today + 1 })
-  todo4 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 4", due: Date.today + 1 })
-  todo5 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 5", due: Date.today + 1 })
 
+  todo1 = HTTParty.post url("todos"), query:{title: "Test todo 1", due:Date.today + 1}
+  todo2 = HTTParty.post url("todos"), query:{title: "Test todo 2", due:Date.today + 1}
+  todo3 = HTTParty.post url("todos"), query:{title: "Test todo 3", due:Date.today + 1}
 
 
   ###  GET Methods Testing
 
   it "Get whole list of todos" do
 
-    r = HTTParty.get('http://lacedeamon.spartaglobal.com/todos')
+    r = HTTParty.get url("todos")
     expect(r.code).to eq 200
     expect(r.message).to eq "OK"
 
@@ -24,7 +22,7 @@ describe HTTParty do
 
   it "Get specific todo" do
 
-    r = HTTParty.get("http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}")
+    r = HTTParty.get url("todos/#{todo1['id']}")
     expect(r.code).to eq 200
     expect(r.message).to eq "OK"
     expect(r['id']).to eq todo1['id']
@@ -35,7 +33,7 @@ describe HTTParty do
 
   it "get invalid ID todo" do
 
-    r = HTTParty.get('http://lacedeamon.spartaglobal.com/todos/9999')
+    r = HTTParty.get url("todos/9999")
     expect(r.code).to eq 404
     expect(r.message).to eq "Not Found"
 
@@ -43,7 +41,7 @@ describe HTTParty do
 
   it "get long ID" do
 
-    r = HTTParty.get('http://lacedeamon.spartaglobal.com/todos/79609876554337887667')
+    r = HTTParty.get url("todos/79609876554337887667")
     expect(r.code).to eq 404
     expect(r.message).to eq "Not Found"
 
@@ -53,10 +51,10 @@ describe HTTParty do
 
   it "Update title of item with valid ID" do
 
-    r = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}", query:{title:"Buy Stuff"}
+    r1 = HTTParty.patch url("todos/#{todo1['id']}"), query:{title:"Buy Stuff"}
     expect(r1.code).to eq 200
     expect(r1.message).to eq "OK"
-    expect(r1['id']).to eq 7959
+    expect(r1['id']).to eq todo1['id']
     expect(r1['title']).to eq "Buy Stuff"
     expect(r1['due']).to eq Date.today + 1
 
@@ -64,7 +62,7 @@ describe HTTParty do
 
   it "Update title of item with invalid ID" do
 
-    r2 = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/50", query:{title:"Buy Stuff"}
+    r2 = HTTParty.patch url("todos/50"), query:{title:"Buy Stuff"}
     expect(r2.code).to eq 404
     expect(r2.message).to eq "Not Found"
 
@@ -72,10 +70,10 @@ describe HTTParty do
 
   it "Update due date of item with valid ID" do
 
-    r3 = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}", query:{due:Date.today + 2}
+    r3 = HTTParty.patch url("todos/#{todo1['id']}"), query:{due:Date.today + 2}
     expect(r3.code).to eq 200
     expect(r3.message).to eq "OK"
-    expect(r3['id']).to eq 7959
+    expect(r3['id']).to eq todo1['id']
     expect(r3['title']).to eq "Buy Stuff"
     expect(r3['due']).to eq Date.today + 2
 
@@ -83,15 +81,15 @@ describe HTTParty do
 
   it "Update due date of item with past date" do
 
-    r4 = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}", query:{due:"2002-02-13"}
-    expect(r2.code).to eq 400
-    expect(r2.message).to eq "Bad Request. Date not in future."
+    r4 = HTTParty.patch url("todos/#{todo1['id']}"), query:{due:"2002-02-13"}
+    expect(r4.code).to eq 400
+    expect(r4.message).to eq "Bad Request. Date not in future."
 
   end
 
   it "Update title with nil values" do
 
-    r5 = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}", query:{title:nil}
+    r5 = HTTParty.patch url("todos/#{todo1['id']}"), query:{title:nil}
     expect(r5.code).to eq 405
     expect(r5.message).to eq 'Method Not Allowed'
 
@@ -101,7 +99,8 @@ describe HTTParty do
 
   it "Update whole item with valid ID" do
 
-    put = HTTParty.put("http://lacedeamon.spartaglobal.com/todos/#{todo2['id']}", query:{title: "Hello John", due: Date.today + 4})
+
+    put = HTTParty.put url("todos/#{todo1['id']}"), query:{title: "Hello John", due: "24-09-2016"}
     expect(put.code).to eq 200
     expect(put.message).to eq "OK"
     expect(put['title']).to eq "Hello John"
@@ -112,7 +111,7 @@ describe HTTParty do
 
   it "Attempt update of item with invalid number ID" do
 
-    put1 = HTTParty.put('http://lacedeamon.spartaglobal.com/todos/9999', query:{title: "Hello John", due: "24-09-2016"})
+    put1 = HTTParty.put url("todos/9999"), query:{title: "Hello John", due: "24-09-2016"}
     expect(put1.code).to eq 404
     expect(put1.message).to eq "Not Found"
 
@@ -120,7 +119,7 @@ describe HTTParty do
 
   it "Attempt update of item with invalid letter/character ID" do
 
-    put2 = HTTParty.put('http://lacedeamon.spartaglobal.com/todos/aaaa', query:{title: "Hello John", due: "24-09-2016"})
+    put2 = HTTParty.put url("todos/aaaa"), query:{title: "Hello John", due: "24-09-2016"}
     expect(put2.code).to eq 404
     expect(put2.message).to eq "Not Found. ID Only accepts numbers."
 
@@ -128,7 +127,7 @@ describe HTTParty do
 
   it "Attempt update without ID" do
 
-    put3 = HTTParty.put('http://lacedeamon.spartaglobal.com/todos', query:{title: "Hello John", due: "24-09-2016"})
+    put3 = HTTParty.put url("todos"), query:{title: "Hello John", due: "24-09-2016"}
     expect(put3.code).to eq 405
     expect(put3.message).to eq "Method Not Allowed"
 
@@ -136,7 +135,8 @@ describe HTTParty do
 
   it "update with nil values including title" do
 
-    put4 = HTTParty.put("http://lacedeamon.spartaglobal.com/todos/#{todo2['id']}", query:{title: nil, due: nil})
+
+    put4 = HTTParty.put url("todos/#{todo1['']}"), query:{title: nil, due: nil}
     expect(put4.code).to eq 400
     expect(put4.message).to eq "Bad Request. Title Not Given."
 
@@ -144,7 +144,8 @@ describe HTTParty do
 
   it "update with nil values in due date" do
 
-    put5 = HTTParty.put("http://lacedeamon.spartaglobal.com/todos/#{todo3['id']}", query:{title: "Tester", due: nil})
+
+    put5 = HTTParty.put url("todos/#{todo1['id']}"), query:{title: "Tester", due: nil}
     expect(put5.code).to eq 200
     expect(put5.message).to eq "OK"
     expect(put5['due']).to eq (Date.Today + 1)
@@ -153,7 +154,7 @@ describe HTTParty do
 
   it "Update with date in past" do
 
-    put6 = HTTParty.put("http://lacedeamon.spartaglobal.com/todos/#{todo4['id']}", query:{title: "Tester", due: "01-01-1970"})
+    put6 = HTTParty.put url("todos/#{todo1['id']}"), query:{title: "Tester", due: "01-01-1970"}
     expect(put6.code).to eq 400
     expect(put6.message).to eq "Bad Request. Date Not In Future."
 
@@ -173,7 +174,7 @@ describe HTTParty do
 
   it "Delete with invalid ID" do
 
-    del2 = HTTParty.delete('http://lacedeamon.spartaglobal.com/todos/9999')
+    del2 = HTTParty.delete url("todos/#{todo1['id']}")
     expect(del2.code).to eq 404
     expect(del2.message).to eq "Not Found"
 
@@ -181,7 +182,7 @@ describe HTTParty do
 
   it "Delete without ID/ Whole list" do
 
-    del3 = HTTParty.delete('http://lacedeamon.spartaglobal.com/todos')
+    del3 = HTTParty.delete url("todos")
     expect(del3.code).to eq 405
     expect(del3.message).to eq "Method Not Allowed"
 
