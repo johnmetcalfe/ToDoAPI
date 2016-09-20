@@ -4,9 +4,18 @@ require 'pry'
 
 describe HTTParty do
 
-  before(:each) do
-    
+=begin
+  before(:all) do
+    i = 1
+    6.times do
+      todo() = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo #{i}", due: Date.today + 1 })
+      binding.pry
+      i = i + 1
+    end
+
   end
+
+=end
 
   todo1 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 1", due: Date.today + 1 })
   todo2 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 2", due: Date.today + 1 })
@@ -241,6 +250,10 @@ describe HTTParty do
     expect(post5.code).to eq 422
     expect(post5.message).to eq "Unprocessable Entity"
 
+  end
+
+  after(:all) do
+    delete_all()
   end
 
 
