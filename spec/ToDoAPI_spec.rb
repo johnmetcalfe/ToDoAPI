@@ -4,6 +4,10 @@ require 'pry'
 
 describe HTTParty do
 
+  before(:each) do
+    
+  end
+
   todo1 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 1", due: Date.today + 1 })
   todo2 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 2", due: Date.today + 1 })
   todo3 = HTTParty.post('http://lacedeamon.spartaglobal.com/todos', query:{title: "Test todo 3", due: Date.today + 1 })
@@ -56,9 +60,9 @@ describe HTTParty do
     r1 = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}", query:{title:"Buy Stuff"}
     expect(r1.code).to eq 200
     expect(r1.message).to eq "OK"
-    expect(r1['id']).to eq 7959
+    expect(r1['id']).to eq todo1['id']
     expect(r1['title']).to eq "Buy Stuff"
-    expect(r1['due']).to eq Date.today + 1
+    expect(r1['due']).to eq "#{Date.today + 1}"
 
   end
 
@@ -75,7 +79,7 @@ describe HTTParty do
     r3 = HTTParty.patch "http://lacedeamon.spartaglobal.com/todos/#{todo1['id']}", query:{due:"2017-02-13"}
     expect(r3.code).to eq 200
     expect(r3.message).to eq "OK"
-    expect(r3['id']).to eq 7959
+    expect(r3['id']).to eq todo1['id']
     expect(r3['title']).to eq "Buy Stuff"
     expect(r3['due']).to eq "2017-02-13"
 
