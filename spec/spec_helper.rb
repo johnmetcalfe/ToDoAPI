@@ -13,13 +13,5 @@ require 'httparty'
 require 'date'
 
 def url(path)
-  ('http://lacedeamon.spartaglobal.com' + path)
-end
-
-def create_todo
-
-end
-
-def delete_all
-
+  ('http://lacedeamon.spartaglobal.com/' + path)
 end
