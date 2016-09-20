@@ -12,13 +12,7 @@ require 'rspec'
 require 'httparty'
 require 'date'
 
-<<<<<<< HEAD
-def delete_all()
-  r = HTTParty.get url("/todos")
-  r.each do |item|
-    HTTParty.delete url("/todos/#{item['id']}")
-  end
-=======
+
 def url(path)
   ('http://lacedeamon.spartaglobal.com' + path)
 end
@@ -32,5 +26,4 @@ def delete_all()
     r.each do |item|
       HTTParty.delete url("/todos/#{item['id']}")
     end
->>>>>>> AlfieThornton93-master
 end
